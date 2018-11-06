@@ -5,7 +5,7 @@ player_no=-1
 board_size=-1
 time_limit=-1
 RUN_SIZE=-1
-
+BOARD=[]
 idxToHex5=[
 	[ ( -1, -1 ), ( -1, -1 ), ( -1, -1 ), ( -1, -1 ), ( 5, 29 ), ( -1, -1 ), ( 5, 1 ), ( -1, -1 ), ( -1, -1 ),( -1, -1 ), ( -1, -1 ) ],
 	[ ( -1, -1 ), ( -1, -1 ), ( -1, -1 ), ( 5, 28 ), ( -1, -1 ), ( 4, 0 ), ( -1, -1 ), ( 5, 2 ), ( -1, -1 ),( -1, -1 ), ( -1, -1 ) ],
@@ -85,8 +85,40 @@ def getindex(board_size,hex_no,pos):
 		i,j=Ci -hex_no-pos%hex_no,Cj -hex_no+pos%hex_no
 	return((i,j))
 
+def initial_config(board_size):
+	Xdim=-1
+	Ydim=-1
+	if board_size==6:
+		Xdim=23
+		Ydim=13
+	else:
+		Xdim=19
+		Ydim=11
+	for i in range(0,Xdim):
+		l=[]
+		for j in range(0,Ydim):
+			l.append("X")
+		BOARD.append(l)
+	for h in range(0,board_size+1):
+		for p in range(0,6*h):
+			i,j=getindex(board_size,h,p)
+			if (h != board_size and p%h!= 0 or (i != -1 and j != -1)):
+				BOARD[i][j] = "O"
+	if board_size==6:
+		BOARD[11][6]="O"
+	else:
+		BOARD[9][5]="O"
 
-
+def showboard(gboard):
+	for i in range(0,len(gboard)):
+		for j in range(0,len(gboard[0])):
+			if gboard[i][j]=="X":
+				print(" "),
+			else:
+				print(gboard[i][j]+""),
+		print("\n"),
+				
+		
 
 
 
@@ -99,4 +131,6 @@ if __name__ == '__main__':
 	board_size=int(input())
 	time_limit=int(input())
 	RUN_SIZE=int(input())
+	initial_config(5)
+	showboard(BOARD)
 	
