@@ -53,11 +53,6 @@ idxToHex6=[[(-1, -1), (-1, -1), (-1, -1), (-1, -1), (-1, -1), (6, 35), (-1, -1),
  [(-1, -1), (-1, -1), (-1, -1), (-1, -1), (-1, -1), (6, 19), (-1, -1), (6, 17), (-1, -1), (-1, -1), (-1, -1), (-1, -1), (-1, -1)]
 ]
 
-def idxToHex_mapping(board_size,i,j):
-	if board_size==5:
-		return(idxToHex5[i][j])
-	else:
-		return(idxToHex6[i][j])
 
 def getindex(board_size,hex_no,pos):
 	Ci,Cj=-1,-1
@@ -244,6 +239,98 @@ def removeRing(gboard,player_no,hex_no,pos):
 		gboard[index[0]][index[1]] = "O"
 		return (true)
 	return (false)
+
+
+def removeRow(gboard,shex,spos,fhex,fpos):
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	# RUN_SIZE=??
+	index=getindex(board_size,shex,spos)
+	si=index[0]
+	sj=index[1]
+	index=getindex(board_size,fhex,fpos)
+	fi=index[0]
+	fj=index[1]
+	i=-1
+	j=-1
+	if si+sj==fi+fj:
+		if (si > fi):
+			i = si
+			j = sj
+		else:
+			i = fi
+			j = fj
+		for k in range(0,RUN_SIZE):
+			gboard[i][j]="O"
+			i-=1
+			j+=1
+	elif si-sj==fi-fj:
+		if(si<fi):
+			i = si
+			j = sj
+		else:
+			i=fi
+			j=fj
+		for k in range(0,RUN_SIZE):
+			gboard[i][j]="O"
+			i+=1
+			j+=1
+	elif(sj==fj):
+		j=sj
+		if si<fi:
+			i=si
+		else:
+			i=fi
+		for k in range(0,RUN_SIZE):
+			gboard[i][j]="O"
+			i+=2
+	return
+
+
+def removingRingGreedly(curr_board,player_no):
+	pass
+
+def getrun(gboard,player_no):
+	pass
+
+
+def idxToHex(board_size,i,j):
+	if board_size==5:
+		return(idxToHex5[i][j][0],idxToHex5[i][j][1])
+	else:
+		return(idxToHex6[i][j][0],idxToHex6[i][j][1])
+
+def getCopyOfboard(gboard):
+	copyBoard=[]
+	for i in range(0,len(gboard)):
+		l=[]
+		for j in range(0,len(gboard[0])):
+			l.append(gboard[i][j])
+		copyBoard.append(l)
+	return(copyBoard)
+
+def getPositionOfRing(player_no,gboard):
+	positions=[]
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	for i in range(0,len(gboard)):
+		for j in range(0,len(gboard[0])):
+			if player_no==1:
+				if gboard[i][j]=="R":
+					positions.append(idxToHex(board_size,i,j))
+			elif player_no==2:
+				if gboard[i][j]=="B":
+					positions.append(idxToHex(board_size,i,j))
+	return(positions)
+
+def getValidPosOfTheRing(gboard,hex_no,pos):
+	pass
 
 if __name__ == '__main__':
 	player_no=int(input())
