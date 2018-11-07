@@ -118,7 +118,77 @@ def showboard(gboard):
 				print(gboard[i][j]+""),
 		print("\n"),
 				
-		
+def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
+	start=getindex(hex_no1,pos1)
+	end=getindex(hex_no2,pos2)
+	si=-1
+	sj=-1
+	ei=-1
+	ej=-1
+	if(start[0] + start[1] == end[0] + end[1]):
+		if (start[0] > end[0]):
+			si = start[0]
+			sj = start[1]
+			ei = end[0]
+			ej = end[1]
+		else: 
+			ei = start[0]
+			ej = start[1]
+			si = end[0]
+			sj = end[1]
+		si-=1
+		sj+=1
+		ei+=1
+		ej-=1
+		while si>=ei:
+			if (gboard[si][sj]==("r")):
+				gboard[si][sj] = "b"
+			elif (gboard[si][sj]==("b")):
+				gboard[si][sj] = "r"
+			si-=1
+			sj+=1
+	elif(start[0] - start[1] == end[0] - end[1]):
+		if (start[0] < end[0]):
+			si = start[0]
+			sj = start[1]
+			ei = end[0]
+			ej = end[1]
+		else 
+			ei = start[0]
+			ej = start[1]
+			si = end[0]
+			sj = end[1]
+		si+=1
+		sj+=1
+		ei-=1
+		ej-=1
+		while si <= ei:
+			if (gboard[si][sj]==("r")):
+				gboard[si][sj] = "b";
+			else if (gboard[si][sj]==("b")):
+				gboard[si][sj] = "r"
+			si+=1
+			sj+=1
+	elif(start[1] == end[1]):
+		if (start[0] < end[0]):
+			si = start[0]
+			sj = start[1]
+			ei = end[0]
+			ej = end[1]
+		else:
+			ei = start[0]
+			ej = start[1]
+			si = end[0]
+			sj = end[1]
+		si += 2
+		ei -= 2
+		while si<=ei:
+			if (givenboard[si][sj]==("r")):
+				gboard[si][sj] = "b"
+			elif (givenboard[si][sj]==("b")):
+				gboard[si][sj] = "r"
+			si+=2
+	return
 
 
 
