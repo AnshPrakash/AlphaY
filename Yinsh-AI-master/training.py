@@ -1,6 +1,8 @@
 # python3
 # generalising code for (5,5,5) ,(6,6,5) ,(6,6,6)
 import sys
+import random
+
 player_no=-1
 board_size=-1
 time_limit=-1
@@ -294,8 +296,14 @@ def removingRingGreedly(curr_board,player_no):
 	pass
 
 def getrun(gboard,player_no):
+	# RUN_SIZE
 	pass
 
+def FiveDiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
+	pass
+
+def SixDiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
+	pass
 
 def idxToHex(board_size,i,j):
 	if board_size==5:
@@ -330,7 +338,158 @@ def getPositionOfRing(player_no,gboard):
 	return(positions)
 
 def getValidPosOfTheRing(gboard,hex_no,pos):
+	validPos=[]
+	board_size=-1
+	if len(gboard)==23;
+		board_size=6
+	else:
+		board_size=5
+	idx=getindex(board_size,hex_no,pos)
+	# Direction1
+	i=idx[0]
+	j=idx[1]
+	overDisc=False
+	i-=2
+	while i>=0:
+		if gboard[i][j]=="X":
+			break
+		if gboard[i][j]=="O" and overDisc=False:
+			validPos.append(idxToHex(board_size,i,j))
+		elif gboard[i][j]=="O" and overDisc=True:
+			validPos.append(idxToHex(board_size,i,j))
+			break
+		if gboard[i][j]=="r" or gboard[i][j]=="b":
+			overDisc=True
+		if gboard[i][j]=="R" or gboard[i][j]=="B":
+			break
+		i-=2
+	# Direction2
+	i=idx[0]
+	j=idx[1]
+	overDisc=False
+	i-=1
+	j+=1
+	while (i>=0 and j<11 and board_size==5) or (i>=0 and j<13 and board_size==6) :
+		if gboard[i][j]=="X":
+			break
+		if gboard[i][j]=="O" and overDisc=False:
+			validPos.append(idxToHex(board_size,i,j))
+		elif gboard[i][j]=="O" and overDisc=True:
+			validPos.append(idxToHex(board_size,i,j))
+			break
+		if gboard[i][j]=="r" or gboard[i][j]=="b":
+			overDisc=True
+		if gboard[i][j]=="R" or gboard[i][j]=="B":
+			break
+		i-=1
+		j+=1
+
+	# Direction3
+	i = idx[0]
+	j = idx[1]
+	overDisc = False
+	i+=1
+	j+=1
+	while((board_size==5 and i<19 and j<11) or (board_size==6 and i<23 and j<13)):
+		if gboard[i][j]=="X":
+			break
+		if gboard[i][j]=="O" and overDisc=False:
+			validPos.append(idxToHex(board_size,i,j))
+		elif gboard[i][j]=="O" and overDisc=True:
+			validPos.append(idxToHex(board_size,i,j))
+			break
+		if gboard[i][j]=="r" or gboard[i][j]=="b":
+			overDisc=True
+		if gboard[i][j]=="R" or gboard[i][j]=="B":
+			break
+		i+=1
+		j+=1
+	
+	# Direction4
+	i = idx[0]
+	j = idx[1]
+	overDisc = False
+	i+=2
+	while((board_size==5 and i<19) or (board_size==6 and i<23)):
+		if gboard[i][j]=="X":
+			break
+		if gboard[i][j]=="O" and overDisc=False:
+			validPos.append(idxToHex(board_size,i,j))
+		elif gboard[i][j]=="O" and overDisc=True:
+			validPos.append(idxToHex(board_size,i,j))
+			break
+		if gboard[i][j]=="r" or gboard[i][j]=="b":
+			overDisc=True
+		if gboard[i][j]=="R" or gboard[i][j]=="B":
+			break
+		i+=2
+
+	# Direction5
+	i = idx[0]
+	j = idx[1]
+	overDisc = False
+	i+=1
+	j-=1
+	while((board_size==5 and i<19 and j>=0) or (board_size==6 and i<23 and j>=0) ):
+		if gboard[i][j]=="X":
+			break
+		if gboard[i][j]=="O" and overDisc=False:
+			validPos.append(idxToHex(board_size,i,j))
+		elif gboard[i][j]=="O" and overDisc=True:
+			validPos.append(idxToHex(board_size,i,j))
+			break
+		if gboard[i][j]=="r" or gboard[i][j]=="b":
+			overDisc=True
+		if gboard[i][j]=="R" or gboard[i][j]=="B":
+			break
+		i+=1
+		j-=1
+
+	# Direction6
+	i = idx[0]
+	j = idx[1]
+	overDisc = False
+	i-=1
+	j-=1
+	while(i>=0 and j>=0):
+		if gboard[i][j]=="X":
+			break
+		if gboard[i][j]=="O" and overDisc=False:
+			validPos.append(idxToHex(board_size,i,j))
+		elif gboard[i][j]=="O" and overDisc=True:
+			validPos.append(idxToHex(board_size,i,j))
+			break
+		if gboard[i][j]=="r" or gboard[i][j]=="b":
+			overDisc=True
+		if gboard[i][j]=="R" or gboard[i][j]=="B":
+			break
+		i-=1
+		j-=1
+
+	return(validPos)
+	
+
+
+
+
+
+def AllSingleMoves(gboard,player_no,moved,moves):
 	pass
+
+
+def opening(board_size):
+	move="P "
+	while True:
+		hexagon=random.randint(0,3)
+		position=0
+		if hexagon!=0:
+			position=random.randint(0,6*hexagon-1)
+		index=getindex(board_size,hexagon,position)
+		if(BOARD[index[0]][index[1]]=="O"):
+			move=move+hexagon +" "+position
+			return move
+
+
 
 if __name__ == '__main__':
 	player_no=int(input())
