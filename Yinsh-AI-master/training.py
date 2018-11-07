@@ -191,10 +191,59 @@ def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
 	return
 
 
+def placeRing(gboard,player_no,hex_no,pos):
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	index = getindex(board_size,hex_no, pos);
+	if (player_no == 1):
+		gboard[index[0]][index[1]] = "R"
+ 	else:
+		gboard[index[0]][index[1]] = "B"
+	
 
+def moveRing(gboard,player_no,shex,spos,fhex,fpos):
+	si=-1
+	sj=-1
+	fi=-1
+	fj=-1
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	index=getindex(board_size,shex,spos)
+	si = index[0]
+	sj = index[1]
+	index = getindex(board_size,fhex, fpos);
+	fi = index[0]
+	fj = index[1]
+	if (player_no == 1):
+		gboard[si][sj] = "r";
+		gboard[fi][fj] = "R";
+		flipDiscs(gboard, shex, spos, fhex, fpos);
+	elif (player_no == 2):
+		gboard[si][sj] = "b";
+		gboard[fi][fj] = "B";
+		flipDiscs(gboard, shex, spos, fhex, fpos);
+	return
 
-
-
+def removeRing(gboard,player_no,hex_no,pos):
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	index=getindex(board_size,hex_no,pos)
+	if (gboard[index[0]][index[1]]==("R") and player_no == 1):
+		gboard[index[0]][index[1]] = "O"
+		return (true)
+	elif(gboard[index[0]][index[1]]==("B") and player_no == 2):
+		gboard[index[0]][index[1]] = "O"
+		return (true)
+	return (false)
 
 if __name__ == '__main__':
 	player_no=int(input())
