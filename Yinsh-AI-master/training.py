@@ -296,9 +296,100 @@ def removingRingGreedly(curr_board,player_no):
 	pass
 
 def getrun(gboard,player_no):
-	# RUN_SIZE
-	pass
+	runs=[]
+	board_size=-1
+	if len(board_size)==23:
+		board_size==6
+	else:
+		board_size=5
+	if board_size==6:
+		# vertical
+		runs+=DiscRemovalPossible(gboard,player_no,7,0,15,0)
+		runs+=DiscRemovalPossible(gboard,player_no,4,1,18,1)
+		runs+=DiscRemovalPossible(gboard,player_no,3,2,19,2)
+		runs+=DiscRemovalPossible(gboard,player_no,2,3,20,3)
 
+		runs+=DiscRemovalPossible(gboard,player_no,1,4,21,4)
+		runs+=DiscRemovalPossible(gboard,player_no,0,5,22,5)
+		runs+=DiscRemovalPossible(gboard,player_no,1,6,21,6)
+		runs+=DiscRemovalPossible(gboard,player_no,0,7,22,7)
+		
+		runs+=DiscRemovalPossible(gboard,player_no,1,8,21,8)
+		runs+=DiscRemovalPossible(gboard,player_no,2,9,20,9)
+		runs+=DiscRemovalPossible(gboard,player_no,3,10,19,10)
+		runs+=DiscRemovalPossible(gboard,player_no,4,11,18,11)
+		runs+=DiscRemovalPossible(gboard,player_no,7,12,15,12)
+		
+		# right runs
+		runs+=DiscRemovalPossible(gboard,player_no,0,7,4,11)
+		runs+=DiscRemovalPossible(gboard,player_no,0,5,7,12)
+		runs+=DiscRemovalPossible(gboard,player_no,1,4,9,12)
+		runs+=DiscRemovalPossible(gboard,player_no,2,3,11,12)
+
+		runs+=DiscRemovalPossible(gboard,player_no,3,2,13,12)
+		runs+=DiscRemovalPossible(gboard,player_no,4,1,15,12)
+		runs+=DiscRemovalPossible(gboard,player_no,6,1,16,11)
+		runs+=DiscRemovalPossible(gboard,player_no,7,0,18,11)
+		
+		runs+=DiscRemovalPossible(gboard,player_no,9,0,19,10)
+		runs+=DiscRemovalPossible(gboard,player_no,11,0,20,9)
+		runs+=DiscRemovalPossible(gboard,player_no,13,0,21,8)
+		runs+=DiscRemovalPossible(gboard,player_no,15,0,22,7)
+		runs+=DiscRemovalPossible(gboard,player_no,18,1,22,5)
+
+		# left runs
+		runs+=DiscRemovalPossible(gboard,player_no,4,1,0,5)
+		runs+=DiscRemovalPossible(gboard,player_no,7,0,0,7)
+		runs+=DiscRemovalPossible(gboard,player_no,9,0,2,8)
+		runs+=DiscRemovalPossible(gboard,player_no,11,0,2,9)
+
+		runs+=DiscRemovalPossible(gboard,player_no,13,0,3,10)
+		runs+=DiscRemovalPossible(gboard,player_no,15,0,4,11)
+		runs+=DiscRemovalPossible(gboard,player_no,16,1,6,11)
+		runs+=DiscRemovalPossible(gboard,player_no,18,1,7,12)
+
+		runs+=DiscRemovalPossible(gboard,player_no,19,2,9,12)
+		runs+=DiscRemovalPossible(gboard,player_no,20,3,11,12)
+		runs+=DiscRemovalPossible(gboard,player_no,21,4,13,12)
+		runs+=DiscRemovalPossible(gboard,player_no,22,5,15,12)
+		runs+=DiscRemovalPossible(gboard,player_no,22,7,18,11)
+
+	elif board_size==5:
+		# vertical
+		runs +=(DiscRemovalPossible(gboard, player_no, 3, 1, 15, 1)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 2, 2, 16, 2)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 1, 3, 17, 3)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 0, 4, 18, 4)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 1, 5, 17, 5)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 0, 6, 18, 6)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 1, 7, 17, 7)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 2, 8, 16, 8)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 3, 9, 15, 9)) 
+
+		# rightRun
+		runs +=(DiscRemovalPossible(gboard, player_no, 0, 4, 6, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 1, 3, 8, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 2, 2, 10, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 3, 1, 12, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 5, 1, 13, 9)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 6, 0, 15, 9)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 8, 0, 16, 8)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 10, 0, 17, 7)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 12, 0, 18, 6)) 
+
+		# left Runs
+		runs +=(DiscRemovalPossible(gboard, player_no, 6, 0, 0, 6)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 8, 0, 1, 7)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 10, 0, 2, 8)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 12, 0, 3, 9)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 13, 1, 5, 9)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 15, 1, 6, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 16, 2, 8, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 17, 3, 10, 10)) 
+		runs +=(DiscRemovalPossible(gboard, player_no, 18, 4, 12, 10)) 
+
+	return runs
+# list of list eg.[[h1,p1,h2,p2],[..],..]
 def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
 	board_size=-1
 	if len(gboard)==23:
@@ -425,6 +516,7 @@ def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
 			sx+=2
 
 	return idcies_for_removal_in_this_row
+	
 
 
 
