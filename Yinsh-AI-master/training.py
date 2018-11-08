@@ -299,11 +299,135 @@ def getrun(gboard,player_no):
 	# RUN_SIZE
 	pass
 
-def FiveDiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
-	pass
+def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	lookForMarker=""
+	if player_no==1:
+		lookForMarker="r"
+	elif player_no==2:
+		lookForMarker="b"
+	idcies_for_removal_in_this_row=[]
+	if si+sj==fi+fj:
+		i=-1
+		j=-1
+		ii=-1
+		jj=-1
+		if(si>fi):
+			i=si
+			j=sj
+			ii=fi
+			jj=fj
+		else:
+			ii=si
+			jj=sj
+			i=fi
+			j=fj
+		count=0
+		initial_index=(-1,-1)
+		final_index=(-1,-1)
+		sx=i
+		sy=j
+		while sx>=ii:
+			if gboard[sx][sy]==lookForMarker:
+				if count==0:
+					initial_index=sx,sy
+				count+=1
+				if count==RUN_SIZE:
+					index=[-1,-1,-1,-1]
+					final_index=sx,sy
+					index[0]=initial_index[0]
+					index[1]=initial_index[1]
+					index[2]=final_index[0]
+					index[3]=final_index[1]
+					idcies_for_removal_in_this_row.append(index)
+					sx = initial_index[0] - 1
+					sy = initial_index[1] + 1
+					count=0
+			else:
+				count=0
+			sx-=1
+			sy+=1
+	elif si-sj==fi-fj:
+		i=-1
+		j=-1
+		ii=-1
+		jj=-1
+		if si<fi:
+			i=si
+			j=sj
+			ii=fi
+			jj=fj
+		else:
+			ii=si
+			jj=sj
+			i=fi
+			j=fj
+		count=0
+		initial_index=(-1,-1)
+		final_index=(-1,-1)
+		sx=i
+		sy=j
+		while sx<=ii:
+			if gboard[sx][sy]==lookForMarker:
+				if count==0:
+					initial_index=sx,sy
+				count+=1
+				if count==RUN_SIZE:
+					index=[-1,-1,-1,-1]
+					final_index=sx,sy
+					index[0]=initial_index[0]
+					index[1]=initial_index[1]
+					index[2]=final_index[0]
+					index[3]=final_index[1]
+					idcies_for_removal_in_this_row.append(index)
+					sx = initial_index[0] + 1
+					sy = initial_index[1] + 1
+					count=0
+			else:
+				count=0
+			sx+=1
+			sy+=1
+	elif fj==sj:
+		i=-1
+		ii=-1
+		if si<fi:
+			i=si
+			ii=fi
+		else:
+			i=fi
+			ii=si
+		count=0
+		initial_index=(-1,-1)
+		final_index=(-1,-1)
+		sx=i
+		sy=j
+		while sx<=ii:
+			if gboard[sx][sy]==lookForMarker:
+				if count==0:
+					initial_index=sx,sy
+				count+=1
+				if count==RUN_SIZE:
+					index=[-1,-1,-1,-1]
+					final_index=sx,sy
+					index[0]=initial_index[0]
+					index[1]=initial_index[1]
+					index[2]=final_index[0]
+					index[3]=final_index[1]
+					idcies_for_removal_in_this_row.append(index)
+					sx = initial_index[0] + 2
+					count=0
+			else:
+				count=0
+			sx+=2
 
-def SixDiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
-	pass
+	return idcies_for_removal_in_this_row
+
+
+
 
 def idxToHex(board_size,i,j):
 	if board_size==5:
