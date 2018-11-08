@@ -291,9 +291,35 @@ def removeRow(gboard,shex,spos,fhex,fpos):
 			i+=2
 	return
 
-
+# return hex,pos of the ring to be removed
 def removingRingGreedly(curr_board,player_no):
-	pass
+	hex_pos=(-1,-1)
+	board_size=-1
+	if len(curr_board)==23:
+		board_size=6
+	else:
+		board_size=5
+	lookForRing=[]
+	if player_no==1:
+		lookForRing="R"
+	elif player_no==2:
+		lookForRing="B"
+	ring_arr=getPositionOfRing(player_no,curr_board)
+	util=0
+	i=0
+	for p in ring_arr:
+		x,y=getindex(p[0],p[1])
+		curr_board[x][y]="O"
+		u=Utility(curr_board,player_no)
+		if i==0:
+			util=u
+			hex_pos=p
+		if u>util:
+			util=u
+			hex_pos=p
+		curr_board[x][y]=lookForRing
+	return(hex_pos)
+
 
 def getrun(gboard,player_no):
 	runs=[]
@@ -520,7 +546,6 @@ def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
 
 
 
-
 def idxToHex(board_size,i,j):
 	if board_size==5:
 		return(idxToHex5[i][j][0],idxToHex5[i][j][1])
@@ -536,6 +561,7 @@ def getCopyOfboard(gboard):
 		copyBoard.append(l)
 	return(copyBoard)
 
+# list of tuple of (hex,pos)
 def getPositionOfRing(player_no,gboard):
 	positions=[]
 	board_size=-1
@@ -705,7 +731,8 @@ def opening(board_size):
 			move=move+hexagon +" "+position
 			return move
 
-
+def Utility(gboard,player_no):
+	pass
 
 if __name__ == '__main__':
 	player_no=int(input())
