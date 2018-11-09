@@ -945,17 +945,55 @@ def update_move(move,player_no):
 def get_move():
 	s=MinMax(BOARD,my_player_no,0,-math.inf,math.inf,3)
 	return s
-	
+
+
+
+
+
+def main():
+	move=""
+	data=input().strip().split()
+	my_player_no=int(data[0])
+	BOARD_SIZE=int(data[1])
+	time_limit=int(data[2])
+	gameover=False
+	if my_player_no==2:
+		opponent_player=1
+	else:
+		opponent_player=2
+	initial_config(BOARD_SIZE)
+	if my_player_no==1:
+		for i in range(0,BOARD_SIZE):
+			move=opening(BOARD_SIZE)
+			update_move(move,1)
+			print(move)
+			move=input()
+			update_move(move,2)
+		while (not gameover):
+			move=get_move()
+			update_move(move,1)
+			print(move)
+			move=input()
+			update_move(move,2)
+	elif my_player_no==2:
+		for i in range(0,BOARD_SIZE):
+			move=input()
+			update_move(move,1)
+			move=opening(BOARD_SIZE)
+			update_move(move,2)
+			print(move)
+		move=input()
+		update_move(move,1)
+		while (not gameover):
+			move=get_move()
+			update_move(move,2)
+			print(move)
+			move=input()
+			update_move(move,1)
+			
+
+
+
 
 if __name__ == '__main__':
-	my_player_no=int(input())
-	if my_player_no==1:
-		opponent_player=2
-	else:
-		opponent_player=1
-	BOARD_SIZE=int(input())
-	time_limit=int(input())
-	RUN_SIZE=int(input())
-	initial_config(5)
-	showboard(BOARD)
-	
+	main()
