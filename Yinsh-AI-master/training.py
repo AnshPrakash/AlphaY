@@ -743,7 +743,7 @@ def AllSingleMoves(gboard,player_no,moved,moves):
 		temp=(getCopyOfboard(gboard),moves) #pair of board,string
 		allmoves+=temp
 	return(allmoves)
-	
+
 def opening(board_size):
 	move="P "
 	while True:
@@ -755,6 +755,30 @@ def opening(board_size):
 		if(BOARD[index[0]][index[1]]=="O"):
 			move=move+hexagon +" "+position
 			return move
+
+
+def gameOver(gboard):
+	count1=0
+	count2=0
+	count3=0
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	for i in range(0,len(gboard)):
+		for j in range(0,len(gboard[0])):
+			if gboard[i][j]=="O":
+				count3+=1
+			if gboard[i][j]=="R":
+				count1+=1
+			if gboard[i][j]=="B":
+				count2+=1
+	if count3==0:
+		return(True)
+	elif(count1>=board_size-2 and count2>=board_size-2):
+		return(False)
+	return True
 
 def Utility(gboard,player_no):
 	pass
