@@ -4,7 +4,7 @@ import sys
 import random
 
 player_no=-1
-board_size=-1
+BOARD_SIZE=-1
 time_limit=-1
 RUN_SIZE=-1
 BOARD=[]
@@ -321,7 +321,7 @@ def removingRingGreedly(curr_board,player_no):
 	return(hex_pos)
 
 
-def getrun(gboard,player_no):
+def getruns(gboard,player_no):
 	runs=[]
 	board_size=-1
 	if len(board_size)==23:
@@ -415,7 +415,7 @@ def getrun(gboard,player_no):
 		runs +=(DiscRemovalPossible(gboard, player_no, 18, 4, 12, 10)) 
 
 	return runs
-# list of list eg.[[h1,p1,h2,p2],[..],..]
+# list of list eg.[[s1,e1,s2,e2],[..],..]
 def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
 	board_size=-1
 	if len(gboard)==23:
@@ -711,14 +711,39 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	return(validPos)
 	
 
-
-
-
-
 def AllSingleMoves(gboard,player_no,moved,moves):
-	pass
+	runs=getruns(gboard,player_no)
+	allmoves=[] #list of board,string to get to that move
+	if(len(runs)!=0 and len(getPositionOfRing(player_no,gboard))>=BOARD_SIZE-2 ):
+		for run in runs:
+			temp_board=getCopyOfboard(gboard)
+			tmp=moves
+			idx=[-1,-1,-1,-1]
+			idx[0],idx[1]=idxToHex(run[0],run[1])
+			idx[2],idx[3]=idxToHex(run[2],run[3])
 
+			removeRow(temp_board,idx[0],idx[1],idx[2],idx[3])
+			hex_pos=removingRingGreedly(temp_board,player_no)
+			temp_board[getindex(hex_pos[0], hex_pos[1])[0]][getindex(hex_pos[0], hex_pos[1])[1]]="O"
+			tmp += " RS " + idx[0] + " " + idx[1] + " RE " + idx[2] + " " + idx[3] + " X " + hex_pos[0] + " "+ hex_pos[1]
 
+			allmoves+=AllSingleMoves(temp_board,player_no,moved,tmp)
+	elif(moved==False and len(getPositionOfRing(player_no,gboard))>=BOARD_SIZE-2):
+		pos_of_Rings=getPositionOfRing(player_no,gboard)
+		neigh_states=[]
+		for posR in pos_of_Rings:
+			validPos=getValidPosOfTheRing(gboard,posR[0],posR[1])
+			for vPos in validPos:
+				s=""
+				temp_board=getCopyOfboard(gboard)
+				moveRing(temp_board,player_no,posR[0],posR[1],vPos[0],vPos[1])
+				s="S "+ posR[0]+" "+posR[1]+" "+M+" "+vPos[0]+" "+vPos[1]
+				allmoves+=AllSingleMoves(temp_board,player_no,True,s)
+	else:
+		temp=(getCopyOfboard(gboard),moves) #pair of board,string
+		allmoves+=temp
+	return(allmoves)
+	
 def opening(board_size):
 	move="P "
 	while True:
@@ -736,7 +761,7 @@ def Utility(gboard,player_no):
 
 if __name__ == '__main__':
 	player_no=int(input())
-	board_size=int(input())
+	BOARD_SIZE=int(input())
 	time_limit=int(input())
 	RUN_SIZE=int(input())
 	initial_config(5)
