@@ -892,7 +892,7 @@ def MinMax(gboard,player_no,depth,alpha,beta,cutoff):
 
 	returnMove=tmp+returnMove
 	return returnMove.strip()
-	
+
 def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
 	if(gameOver(gboard)==True or depth==cutoff):
 		return(Utility(gboard))
@@ -921,6 +921,26 @@ def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
 				break
 		return v
 
+
+def update_move(move,player_no):
+	movesplit=move.strip().split()
+	if movesplit[0]=="P":
+		placeRing(BOARD,player_no,int(movesplit[1]),int(movesplit[2]))
+	elif(movesplit[0]=="S"):
+		moveRing(BOARD,player_no,int(movesplit[1]),int(movesplit[2]),int(movesplit[4]),int(movesplit[5]))
+		remains=""
+		for rem in movesplit[6:]:
+			remains+=rem+" "
+		remains=remains.strip()
+		update_move(remains,player_no)
+	elif(movesplit[0]=="RS"):
+		removeRow(BOARD,int(movesplit[1]),int(movesplit[2]),int(movesplit[4]),int(movesplit[5]))
+		removeRing(BOARD,player_no,int(movesplit[7]),int(movesplit[8]))
+		remains=""
+		for rem in movesplit[9:]:
+			remains+=rem+" "
+		remains=remains.strip()
+		update_move(remains,player_no)
 
 
 
