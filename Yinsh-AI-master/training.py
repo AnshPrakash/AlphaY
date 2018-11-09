@@ -1,9 +1,12 @@
 # python3
 # generalising code for (5,5,5) ,(6,6,5) ,(6,6,6)
 import sys
+import math
 import random
 
-player_no=-1
+
+my_player_no=-1
+opponent_player=-1
 BOARD_SIZE=-1
 time_limit=-1
 RUN_SIZE=-1
@@ -780,11 +783,153 @@ def gameOver(gboard):
 		return(False)
 	return True
 
-def Utility(gboard,player_no):
-	pass
+
+def Gamescore(gboard):
+	Rring=0
+	Bring=0
+	Rmarker=0
+	Bmarker=0
+	score=0.0
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	for i in range(0,len(gboard)):
+		for j in range(0,len(gboard[0])):
+			if gboard[i][j]=="R":
+				Rring+=1
+			if gboard[i][j]=="B":
+				Bring+=1
+			if gboard[i][j]=="r":
+				Rmarker+=1
+			if gboard[i][j]=="b":
+				Bmarker+=1
+	Rring=board_size-Rring
+	Bring=board_size-Bring
+
+	if(Rring == 3 and Bring==0):
+		score = score+10
+		score2 = score2 + 0	
+	elif(Rring == 3 and Bring==1):
+		score = score + 9
+		score2 = score2+1
+	elif(Rring == 3 and Bring==2):
+		score = score + 8
+		score2 = score2+2
+	elif(Rring == 2 and Bring==0):
+		score = score + 7
+		score2 = score2+3
+	elif(Rring == 2 and Bring==1):
+		score = score + 6
+		score2 = score2+ 4
+	elif(Rring == 1 and Bring==0):
+		score = score + 6
+		score2 = score2+ 4
+	elif(Rring == 2 and Bring==2):
+		score = score + 5
+		score2 = score2+ 5
+	elif(Rring == 1 and Bring==1):
+		score = score + 5
+		score2 = score2+ 5
+	elif(Rring ==0 and Bring==0):
+		score = score + 5
+		score2 = score2+ 5
+	elif(Rring == 0 and Bring==1):
+		score = score + 4
+		score2 = score2+ 6
+	elif(Rring == 1 and Bring==2):
+		score = score + 4
+		score2 = score2+ 6
+	elif(Rring == 0 and Bring==2):
+		score = score + 3
+	elif(Rring == 2 and Bring==3):
+		score = score + 2
+		score2 = score2+ 8
+	elif(Rring == 1 and Bring==3):
+		score = score + 1
+		score2 = score2 + 9
+	elif(Rring == 0 and Bring==3):
+		score = score + 0
+		score2 = score2+10
+
+	score=score+Rmarker/10
+	score2=score2+Bmarker/10
+	if my_player_no==1:
+		score=score-score2
+	else:
+		score=score2-score
+	return 10*score
+	
+
+def Utility(gboard):
+	util=0
+	util=Gamescore(gboard)
+	return(util)
+
+
+returnMove=""
+def MinMax(gboard,player_no,depth,alpha,beta,cutoff):
+	returnMove=""
+	board_size=-1
+	if len(gboard)==23:
+		board_size=6
+	else:
+		board_size=5
+	runs=getruns(gboard,player_no)
+	tmp=""
+	while len(runs)!=0 and len(getPositionOfRing(player_no,gboard))>=board_size-2:
+		idx=runs[0]
+		idx[0],idx[1]=idxToHex(board_size,idx[0],idx[1])
+		idx[2],idx[3]=idxToHex(board_size,idx[2],idx[3])
+		removeRow(gboard,idx[0],idx[1],idx[2],idx[3])
+		hex_pos=removingRingGreedly(gboard,player_no)
+		gboard[getindex(board_size,hex_pos[0], hex_pos[1])[0]][getindex(board_size,hex_pos[0], hex_pos[1])[1]]="O"
+		tmp+="RS " + idx[0] + " " + idx[1] + " RE " + idx[2] + " " + idx[3] + " X " + hex_pos[0] + " "+ hex_pos[1]+" "
+		runs=getruns(gboard,player_no)
+	if (len(getPositionOfRing(player_no,gboard))>=board_size-2):
+		AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff)
+
+	returnMove=tmp+returnMove
+	return returnMove.strip()
+	
+def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
+	if(gameOver(gboard)==True or depth==cutoff):
+		return(Utility(gboard))
+	elif(player_no==my_player_no):
+		v=-math.inf
+		neighbours=AllSingleMoves(gboard,my_player_no,False,"")
+		# Order States
+		for nei in neighbours:
+			u=max(v,AlphaBeta(nei[0],opponent_player,depth+1,alpha,beta,cutoff))
+			if u>v:
+				if depth==0:
+					# global variable return move
+					returnMove=nei[1]
+				v=u
+			alpha=max(alpha,v)
+			if beta<=alpha:
+				break
+		return(v)
+	else:
+		v=math.inf
+		neighbours=AllSingleMoves(gboard,opponent_player,False,"")
+		for nei in neighbours:
+			v=min(v,AlphaBeta(nei[0],my_player_no,depth+1,alpha,beta,cutoff))
+			beta=min(beta,v)
+			if beta<=alpha:
+				break
+		return v
+
+
+
 
 if __name__ == '__main__':
-	player_no=int(input())
+	my_player_no=int(input())
+	if my_player_no==1:
+		opponent_player=2
+	else:
+		opponent_player=1
 	BOARD_SIZE=int(input())
 	time_limit=int(input())
 	RUN_SIZE=int(input())
