@@ -942,7 +942,10 @@ def update_move(move,player_no):
 		remains=remains.strip()
 		update_move(remains,player_no)
 
-
+def get_move():
+	s=MinMax(BOARD,my_player_no,0,-math.inf,math.inf,3)
+	return s
+	
 
 if __name__ == '__main__':
 	my_player_no=int(input())
