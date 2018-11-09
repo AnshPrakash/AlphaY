@@ -956,6 +956,7 @@ def main():
 	my_player_no=int(data[0])
 	BOARD_SIZE=int(data[1])
 	time_limit=int(data[2])
+	RUN_SIZE=int(data[3])
 	gameover=False
 	if my_player_no==2:
 		opponent_player=1
@@ -991,9 +992,6 @@ def main():
 			move=input()
 			update_move(move,1)
 			
-
-
-
 
 if __name__ == '__main__':
 	main()
