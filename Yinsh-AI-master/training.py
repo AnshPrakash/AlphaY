@@ -1,7 +1,8 @@
 # python3
 # generalising code for (5,5,5) ,(6,6,5) ,(6,6,6)
+from __future__ import print_function
 import sys
-import math
+# import math
 import random
 
 
@@ -44,7 +45,7 @@ idxToHex6=[[(-1, -1), (-1, -1), (-1, -1), (-1, -1), (-1, -1), (6, 35), (-1, -1),
  [(-1, -1), (5, 24), (-1, -1), (3, 15), (-1, -1), (2, 11), (-1, -1), (2, 1), (-1, -1), (3, 3), (-1, -1), (5, 6), (-1, -1)], 
  [(6, 28), (-1, -1), (4, 19), (-1, -1), (2, 10), (-1, -1), (1, 0), (-1, -1), (2, 2), (-1, -1), (4, 5), (-1, -1), (6, 8)], 
  [(-1, -1), (5, 23), (-1, -1), (3, 14), (-1, -1), (1, 5), (-1, -1), (1, 1), (-1, -1), (3, 4), (-1, -1), (5, 7), (-1, -1)], 
- [(6, 27), (-1, -1), (4, 18), (-1, -1), (2, 9), (-1, -1), (-1, -1), (-1, -1), (2, 3), (-1, -1), (4, 6), (-1, -1), (6, 9)], 
+ [(6, 27), (-1, -1), (4, 18), (-1, -1), (2, 9), (-1, -1), (0, 0), (-1, -1), (2, 3), (-1, -1), (4, 6), (-1, -1), (6, 9)], 
  [(-1, -1), (5, 22), (-1, -1), (3, 13), (-1, -1), (1, 4), (-1, -1), (1, 2), (-1, -1), (3, 5), (-1, -1), (5, 8), (-1, -1)], 
  [(6, 26), (-1, -1), (4, 17), (-1, -1), (2, 8), (-1, -1), (1, 3), (-1, -1), (2, 4), (-1, -1), (4, 7), (-1, -1), (6, 10)], 
  [(-1, -1), (5, 21), (-1, -1), (3, 12), (-1, -1), (2, 7), (-1, -1), (2, 5), (-1, -1), (3, 6), (-1, -1), (5, 9), (-1, -1)],
@@ -65,6 +66,9 @@ def getindex(board_size,hex_no,pos):
 		Ci,Cj=9,5
 	else:
 		Ci,Cj=11,6
+	if hex_no==0 and pos==0:
+		# print("I am here",file=sys.stderr)
+		return(Ci,Cj)
 	if pos<0 or pos>6*hex_no-1:
 		return((-1,-1))
 	elif hex_no==board_size and pos%hex_no==0:
@@ -113,14 +117,17 @@ def showboard(gboard):
 	for i in range(0,len(gboard)):
 		for j in range(0,len(gboard[0])):
 			if gboard[i][j]=="X":
-				print(" "),
+				sys.stderr.write(" ")
+				# print(" ",file=sys.stderr),
 			else:
-				print(gboard[i][j]+""),
-		print("\n"),
+				# print(gboard[i][j]+"",file=sys.stderr),
+				sys.stderr.write(gboard[i][j])
+		sys.stderr.write("\n")
+		# print("\n",file=sys.stderr),
 				
 def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
-	start=getindex(hex_no1,pos1)
-	end=getindex(hex_no2,pos2)
+	start=getindex(BOARD_SIZE,hex_no1,pos1)
+	end=getindex(BOARD_SIZE,hex_no2,pos2)
 	si=-1
 	sj=-1
 	ei=-1
@@ -153,7 +160,7 @@ def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
 			sj = start[1]
 			ei = end[0]
 			ej = end[1]
-		else 
+		else: 
 			ei = start[0]
 			ej = start[1]
 			si = end[0]
@@ -165,7 +172,7 @@ def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
 		while si <= ei:
 			if (gboard[si][sj]==("r")):
 				gboard[si][sj] = "b";
-			else if (gboard[si][sj]==("b")):
+			elif (gboard[si][sj]==("b")):
 				gboard[si][sj] = "r"
 			si+=1
 			sj+=1
@@ -183,20 +190,16 @@ def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
 		si += 2
 		ei -= 2
 		while si<=ei:
-			if (givenboard[si][sj]==("r")):
+			if (gboard[si][sj]==("r")):
 				gboard[si][sj] = "b"
-			elif (givenboard[si][sj]==("b")):
+			elif (gboard[si][sj]==("b")):
 				gboard[si][sj] = "r"
 			si+=2
 	return
 
 
 def placeRing(gboard,player_no,hex_no,pos):
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	index = getindex(board_size,hex_no, pos);
 	if (player_no == 1):
 		gboard[index[0]][index[1]] = "R"
@@ -223,27 +226,23 @@ def moveRing(gboard,player_no,shex,spos,fhex,fpos):
 	if (player_no == 1):
 		gboard[si][sj] = "r";
 		gboard[fi][fj] = "R";
-		flipDiscs(gboard, shex, spos, fhex, fpos);
+		flipDisc(gboard, shex, spos, fhex, fpos);
 	elif (player_no == 2):
 		gboard[si][sj] = "b";
 		gboard[fi][fj] = "B";
-		flipDiscs(gboard, shex, spos, fhex, fpos);
+		flipDisc(gboard, shex, spos, fhex, fpos);
 	return
 
 def removeRing(gboard,player_no,hex_no,pos):
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	index=getindex(board_size,hex_no,pos)
 	if (gboard[index[0]][index[1]]==("R") and player_no == 1):
 		gboard[index[0]][index[1]] = "O"
-		return (true)
+		return (True)
 	elif(gboard[index[0]][index[1]]==("B") and player_no == 2):
 		gboard[index[0]][index[1]] = "O"
-		return (true)
-	return (false)
+		return (True)
+	return (False)
 
 
 def removeRow(gboard,shex,spos,fhex,fpos):
@@ -297,11 +296,7 @@ def removeRow(gboard,shex,spos,fhex,fpos):
 # return hex,pos of the ring to be removed
 def removingRingGreedly(curr_board,player_no):
 	hex_pos=(-1,-1)
-	board_size=-1
-	if len(curr_board)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	lookForRing=[]
 	if player_no==1:
 		lookForRing="R"
@@ -311,9 +306,9 @@ def removingRingGreedly(curr_board,player_no):
 	util=0
 	i=0
 	for p in ring_arr:
-		x,y=getindex(p[0],p[1])
+		x,y=getindex(board_size,p[0],p[1])
 		curr_board[x][y]="O"
-		u=Utility(curr_board,player_no)
+		u=Utility(curr_board)
 		if i==0:
 			util=u
 			hex_pos=p
@@ -326,11 +321,7 @@ def removingRingGreedly(curr_board,player_no):
 
 def getruns(gboard,player_no):
 	runs=[]
-	board_size=-1
-	if len(board_size)==23:
-		board_size==6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	if board_size==6:
 		# vertical
 		runs+=DiscRemovalPossible(gboard,player_no,7,0,15,0)
@@ -420,11 +411,7 @@ def getruns(gboard,player_no):
 	return runs
 # list of list eg.[[s1,e1,s2,e2],[..],..]
 def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	lookForMarker=""
 	if player_no==1:
 		lookForMarker="r"
@@ -524,7 +511,7 @@ def DiscRemovalPossible(gboard,player_no,si,sj,fi,fj):
 		initial_index=(-1,-1)
 		final_index=(-1,-1)
 		sx=i
-		sy=j
+		sy=sj
 		while sx<=ii:
 			if gboard[sx][sy]==lookForMarker:
 				if count==0:
@@ -567,11 +554,7 @@ def getCopyOfboard(gboard):
 # list of tuple of (hex,pos)
 def getPositionOfRing(player_no,gboard):
 	positions=[]
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	for i in range(0,len(gboard)):
 		for j in range(0,len(gboard[0])):
 			if player_no==1:
@@ -584,11 +567,7 @@ def getPositionOfRing(player_no,gboard):
 
 def getValidPosOfTheRing(gboard,hex_no,pos):
 	validPos=[]
-	board_size=-1
-	if len(gboard)==23;
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	idx=getindex(board_size,hex_no,pos)
 	# Direction1
 	i=idx[0]
@@ -598,9 +577,9 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	while i>=0:
 		if gboard[i][j]=="X":
 			break
-		if gboard[i][j]=="O" and overDisc=False:
+		if gboard[i][j]=="O" and overDisc==False:
 			validPos.append(idxToHex(board_size,i,j))
-		elif gboard[i][j]=="O" and overDisc=True:
+		elif gboard[i][j]=="O" and overDisc==True:
 			validPos.append(idxToHex(board_size,i,j))
 			break
 		if gboard[i][j]=="r" or gboard[i][j]=="b":
@@ -617,9 +596,9 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	while (i>=0 and j<11 and board_size==5) or (i>=0 and j<13 and board_size==6) :
 		if gboard[i][j]=="X":
 			break
-		if gboard[i][j]=="O" and overDisc=False:
+		if gboard[i][j]=="O" and overDisc==False:
 			validPos.append(idxToHex(board_size,i,j))
-		elif gboard[i][j]=="O" and overDisc=True:
+		elif gboard[i][j]=="O" and overDisc==True:
 			validPos.append(idxToHex(board_size,i,j))
 			break
 		if gboard[i][j]=="r" or gboard[i][j]=="b":
@@ -638,9 +617,9 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	while((board_size==5 and i<19 and j<11) or (board_size==6 and i<23 and j<13)):
 		if gboard[i][j]=="X":
 			break
-		if gboard[i][j]=="O" and overDisc=False:
+		if gboard[i][j]=="O" and overDisc==False:
 			validPos.append(idxToHex(board_size,i,j))
-		elif gboard[i][j]=="O" and overDisc=True:
+		elif gboard[i][j]=="O" and overDisc==True:
 			validPos.append(idxToHex(board_size,i,j))
 			break
 		if gboard[i][j]=="r" or gboard[i][j]=="b":
@@ -658,9 +637,9 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	while((board_size==5 and i<19) or (board_size==6 and i<23)):
 		if gboard[i][j]=="X":
 			break
-		if gboard[i][j]=="O" and overDisc=False:
+		if gboard[i][j]=="O" and overDisc==False:
 			validPos.append(idxToHex(board_size,i,j))
-		elif gboard[i][j]=="O" and overDisc=True:
+		elif gboard[i][j]=="O" and overDisc==True:
 			validPos.append(idxToHex(board_size,i,j))
 			break
 		if gboard[i][j]=="r" or gboard[i][j]=="b":
@@ -678,9 +657,9 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	while((board_size==5 and i<19 and j>=0) or (board_size==6 and i<23 and j>=0) ):
 		if gboard[i][j]=="X":
 			break
-		if gboard[i][j]=="O" and overDisc=False:
+		if gboard[i][j]=="O" and overDisc==False:
 			validPos.append(idxToHex(board_size,i,j))
-		elif gboard[i][j]=="O" and overDisc=True:
+		elif gboard[i][j]=="O" and overDisc==True:
 			validPos.append(idxToHex(board_size,i,j))
 			break
 		if gboard[i][j]=="r" or gboard[i][j]=="b":
@@ -699,9 +678,9 @@ def getValidPosOfTheRing(gboard,hex_no,pos):
 	while(i>=0 and j>=0):
 		if gboard[i][j]=="X":
 			break
-		if gboard[i][j]=="O" and overDisc=False:
+		if gboard[i][j]=="O" and overDisc==False:
 			validPos.append(idxToHex(board_size,i,j))
-		elif gboard[i][j]=="O" and overDisc=True:
+		elif gboard[i][j]=="O" and overDisc==True:
 			validPos.append(idxToHex(board_size,i,j))
 			break
 		if gboard[i][j]=="r" or gboard[i][j]=="b":
@@ -722,13 +701,13 @@ def AllSingleMoves(gboard,player_no,moved,moves):
 			temp_board=getCopyOfboard(gboard)
 			tmp=moves
 			idx=[-1,-1,-1,-1]
-			idx[0],idx[1]=idxToHex(run[0],run[1])
-			idx[2],idx[3]=idxToHex(run[2],run[3])
+			idx[0],idx[1]=idxToHex(BOARD_SIZE,run[0],run[1])
+			idx[2],idx[3]=idxToHex(BOARD_SIZE,run[2],run[3])
 
 			removeRow(temp_board,idx[0],idx[1],idx[2],idx[3])
 			hex_pos=removingRingGreedly(temp_board,player_no)
-			temp_board[getindex(hex_pos[0], hex_pos[1])[0]][getindex(hex_pos[0], hex_pos[1])[1]]="O"
-			tmp += " RS " + idx[0] + " " + idx[1] + " RE " + idx[2] + " " + idx[3] + " X " + hex_pos[0] + " "+ hex_pos[1]
+			temp_board[getindex(BOARD_SIZE,hex_pos[0], hex_pos[1])[0]][getindex(BOARD_SIZE,hex_pos[0], hex_pos[1])[1]]="O"
+			tmp += " RS " + str(idx[0]) + " " + str(idx[1]) + " RE " + str(idx[2]) + " " + str(idx[3]) + " X " + str(hex_pos[0]) + " "+ str(hex_pos[1])
 
 			allmoves+=AllSingleMoves(temp_board,player_no,moved,tmp)
 	elif(moved==False and len(getPositionOfRing(player_no,gboard))>=BOARD_SIZE-2):
@@ -740,15 +719,19 @@ def AllSingleMoves(gboard,player_no,moved,moves):
 				s=""
 				temp_board=getCopyOfboard(gboard)
 				moveRing(temp_board,player_no,posR[0],posR[1],vPos[0],vPos[1])
-				s="S "+ posR[0]+" "+posR[1]+" "+M+" "+vPos[0]+" "+vPos[1]
+				s="S "+ str(posR[0])+" "+str(posR[1])+" "+"M "+str(vPos[0])+" "+str(vPos[1])
 				allmoves+=AllSingleMoves(temp_board,player_no,True,s)
 	else:
 		temp=(getCopyOfboard(gboard),moves) #pair of board,string
-		allmoves+=temp
+		# print("temp",file=sys.stderr)
+		# print(temp,file=sys.stderr)
+		allmoves+=[temp]
+		# print(allmoves,file=sys.stderr)
+	# print("damit",file=sys.stderr)
+	# print(allmoves[0],file=sys.stderr)
 	return(allmoves)
 
 def opening(board_size):
-	move="P "
 	while True:
 		hexagon=random.randint(0,3)
 		position=0
@@ -756,19 +739,14 @@ def opening(board_size):
 			position=random.randint(0,6*hexagon-1)
 		index=getindex(board_size,hexagon,position)
 		if(BOARD[index[0]][index[1]]=="O"):
-			move=move+hexagon +" "+position
-			return move
+                        return "P {} {}".format(hexagon, position)
 
 
 def gameOver(gboard):
 	count1=0
 	count2=0
 	count3=0
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	for i in range(0,len(gboard)):
 		for j in range(0,len(gboard[0])):
 			if gboard[i][j]=="O":
@@ -790,11 +768,8 @@ def Gamescore(gboard):
 	Rmarker=0
 	Bmarker=0
 	score=0.0
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	score2=0.0
+	board_size=BOARD_SIZE
 	for i in range(0,len(gboard)):
 		for j in range(0,len(gboard[0])):
 			if gboard[i][j]=="R":
@@ -870,12 +845,9 @@ def Utility(gboard):
 
 returnMove=""
 def MinMax(gboard,player_no,depth,alpha,beta,cutoff):
+	global returnMove
 	returnMove=""
-	board_size=-1
-	if len(gboard)==23:
-		board_size=6
-	else:
-		board_size=5
+	board_size=BOARD_SIZE
 	runs=getruns(gboard,player_no)
 	tmp=""
 	while len(runs)!=0 and len(getPositionOfRing(player_no,gboard))>=board_size-2:
@@ -888,16 +860,18 @@ def MinMax(gboard,player_no,depth,alpha,beta,cutoff):
 		tmp+="RS " + idx[0] + " " + idx[1] + " RE " + idx[2] + " " + idx[3] + " X " + hex_pos[0] + " "+ hex_pos[1]+" "
 		runs=getruns(gboard,player_no)
 	if (len(getPositionOfRing(player_no,gboard))>=board_size-2):
+		# print("yo I am here",file=sys.stderr)
 		AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff)
 
 	returnMove=tmp+returnMove
 	return returnMove.strip()
 
 def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
+	global returnMove
 	if(gameOver(gboard)==True or depth==cutoff):
 		return(Utility(gboard))
 	elif(player_no==my_player_no):
-		v=-math.inf
+		v=-float("inf")
 		neighbours=AllSingleMoves(gboard,my_player_no,False,"")
 		# Order States
 		for nei in neighbours:
@@ -905,6 +879,8 @@ def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
 			if u>v:
 				if depth==0:
 					# global variable return move
+					# print("modifying print",file=sys.stderr)
+					# print(nei[1],file=sys.stderr)
 					returnMove=nei[1]
 				v=u
 			alpha=max(alpha,v)
@@ -912,7 +888,7 @@ def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
 				break
 		return(v)
 	else:
-		v=math.inf
+		v=float("inf")
 		neighbours=AllSingleMoves(gboard,opponent_player,False,"")
 		for nei in neighbours:
 			v=min(v,AlphaBeta(nei[0],my_player_no,depth+1,alpha,beta,cutoff))
@@ -922,8 +898,14 @@ def AlphaBeta(gboard,player_no,depth,alpha,beta,cutoff):
 		return v
 
 
+
+
+
 def update_move(move,player_no):
 	movesplit=move.strip().split()
+	# print(move,file=sys.stderr)
+	if len(movesplit)==0:
+		return
 	if movesplit[0]=="P":
 		placeRing(BOARD,player_no,int(movesplit[1]),int(movesplit[2]))
 	elif(movesplit[0]=="S"):
@@ -943,55 +925,68 @@ def update_move(move,player_no):
 		update_move(remains,player_no)
 
 def get_move():
-	s=MinMax(BOARD,my_player_no,0,-math.inf,math.inf,3)
+	s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),3)
 	return s
 
 
 
 
 
-def main():
-	move=""
-	data=input().strip().split()
-	my_player_no=int(data[0])
-	BOARD_SIZE=int(data[1])
-	time_limit=int(data[2])
-	RUN_SIZE=int(data[3])
-	gameover=False
-	if my_player_no==2:
-		opponent_player=1
-	else:
-		opponent_player=2
-	initial_config(BOARD_SIZE)
-	if my_player_no==1:
-		for i in range(0,BOARD_SIZE):
-			move=opening(BOARD_SIZE)
-			update_move(move,1)
-			print(move)
-			move=input()
-			update_move(move,2)
-		while (not gameover):
-			move=get_move()
-			update_move(move,1)
-			print(move)
-			move=input()
-			update_move(move,2)
-	elif my_player_no==2:
-		for i in range(0,BOARD_SIZE):
-			move=input()
-			update_move(move,1)
-			move=opening(BOARD_SIZE)
-			update_move(move,2)
-			print(move)
-		move=input()
-		update_move(move,1)
-		while (not gameover):
-			move=get_move()
-			update_move(move,2)
-			print(move)
-			move=input()
-			update_move(move,1)
-			
+move=""
+data=sys.stdin.readline().strip().split()
+my_player_no=int(data[0])
+BOARD_SIZE=int(data[1])
+time_limit=int(data[2])
+RUN_SIZE=int(data[3])
+gameover=False
+# print(str(BOARD_SIZE) +" "+str(my_player_no)+" "+str(time_limit)+" "+str(RUN_SIZE),file=sys.stderr)
+print("Player id: {}".format(my_player_no), file=sys.stderr)
+if my_player_no==2:
+        opponent_player=1
+else:
+        opponent_player=2
+initial_config(BOARD_SIZE)
+# showboard(BOARD)
+if my_player_no==1:
+        for i in range(0,BOARD_SIZE):
+                move=opening(BOARD_SIZE)
+                update_move(move,1)
+                sys.stdout.write(move+'\n')
+                sys.stdout.flush()
+                move=sys.stdin.readline()
+                update_move(move,2)
+        while (not gameover):
+                move=get_move()
+                update_move(move,1)
+                # print(move+'\n')
+                sys.stdout.write(move+'\n')
+                sys.stdout.flush()
+                move=sys.stdin.readline()
+                update_move(move,2)
+elif my_player_no==2:
+        for i in range(0,BOARD_SIZE):
+                move=sys.stdin.readline()
+                update_move(move,1)
+                # showboard(BOARD)
+                move=opening(BOARD_SIZE)
+                update_move(move,2)
+                # showboard(BOARD)
+                # print(move+'\n')
+                sys.stdout.write(move+'\n')
+                sys.stdout.flush()
+        move=sys.stdin.readline()
+        update_move(move,1)
+        while (not gameover):
+                move=get_move()
+                update_move(move,2)
+                # showboard(BOARD)
+                # print(move+'\n')
+                # print("move is "+move,file=sys.stderr)
+                sys.stdout.write(move+'\n')
+                sys.stdout.flush()
+                move=sys.stdin.readline()
+                update_move(move,1)
+                # showboard(BOARD)
 
-if __name__ == '__main__':
-	main()
+                
+

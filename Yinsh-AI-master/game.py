@@ -3,7 +3,7 @@ from __future__ import print_function
 import copy
 import json
 import math
-# from multiset import Multiset
+from multiset import Multiset
 import numpy as np
 import os
 import sys
