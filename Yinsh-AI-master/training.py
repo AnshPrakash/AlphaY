@@ -835,11 +835,128 @@ def Gamescore(gboard):
 	else:
 		score=score2-score
 	return 10*score
+
+
 	
+def DiscInCol(gboard):
+	return(MarkersInCol(gboard,my_player_no)-MarkersInCol(gboard,opponent_player))
+
+def MarkersInCol(gboard,player_no):
+	ver_score=0.0
+	n=[0.0,0.0,0.0,0.0,0.0]
+	lookForMarker=""
+	if player_no==1:
+		lookForMarker="r"
+	else:
+		lookForMarker="b"
+	count=-1
+	for j in range(0,len(gboard[0])):
+		i=0
+		while i<=BOARD_SIZE:
+			if gboard[i][j]!="X":
+				if gboard[i][j]==lookForMarker:
+					count+=1
+					if(i+1<BOARD_SIZE and gboard[i+1][j]==lookForMarker) :
+						count+=1
+						if(i+2<BOARD_SIZE and gboard[i+2][j]==lookForMarker):
+							count+=1
+							if(i+3 <BOARD_SIZE and gboard[i+3][j]==lookForMarker):
+								count+=1
+								if(i+4<BOARD_SIZE and gboard[i+4][j]==lookForMarker):
+									count+=1
+									n[count]=n[count]+1
+								else:
+									n[count]=n[count]+1
+							else:
+								n[count]=n[count]+1
+						else:
+							n[count]=n[count]+1
+					else:
+						n[count]=n[count]+1
+					i+=count
+					count=-1
+	ver_score=121*n[4]+40*n[3]+13*n[2]+4*n[1]+n[0]
+	return(ver_score)
+
+
+def MarkerInDiag(gboard,player_no,i1,j1,i2,j2):
+	lookForMarker=""
+	if player_no==1:
+		lookForMarker="r"
+	else:
+		lookForMarker="b"
+	diag_score=0.0
+	n=[0.0,0.0,0.0,0.0,0.0]
+	if(i1+j1==i2+j2):
+		i=i1
+		j=j1
+		while i2<=i and j<=j2:
+			if i2<=i and j<=j2 and gboard[i][j]==lookForMarker:
+				count+=1
+				if(i2<=i-1 and j+1<=j2 and gboard[i-1][j+1]==lookForMarker):
+					count+=1
+					if(i2<=i-2 and j+2<=j2 and gboard[i-2][j+2]==lookForMarker):
+						count+=1
+						if(i2<=i-3 and j+3<=j2 and gboard[i-3][j+3]==lookForMarker):
+							count+=1
+							if(i2<=i-4 and j+4<=j2 and gboard[i-4][j+4]==lookForMarker):
+								count+=1
+								n[count]=n[count]+1
+							else:
+								n[count]=n[count]+1
+						else:
+							n[count]=n[count]+1
+					else:
+						n[count]=n[count]+1
+				else:
+					n[count]=n[count]+1
+			if count==-1:
+				i-=1
+				j+=1
+			else:
+				i=i-count-1
+				j=j+count+1
+				count=-1
+	elif(i1-j1==i2-j2):
+		i=i1
+		j=j1
+		while(i<=i2 and j<=j2):
+			if i<=i2 and j<=j2 and gboard[i][j]==lookForMarker:
+				count+=1
+				if(i+1<=i2 and j+1<=j2 and gboard[i+1][j+1]==lookForMarker):
+					count+=1
+					if(i+2<=i2 and j+2<=j2 and gboard[i+2][j+2]==lookForMarker):
+						count+=1
+						if(i+3<=i2 and j+3<=j2 and gboard[i+3][j+3]==lookForMarker):
+							count+=1
+							if(i+4<=i2 and j+4<=j2 and gboard[i+4][j+4]==lookForMarker):
+								count+=1
+								n[count]=n[count]+1
+							else:
+								n[count]=n[count]+1
+						else:
+							n[count]=n[count]+1
+					else:
+						n[count]=n[count]+1
+				else:
+					n[count]=n[count]+1
+			if count==-1:
+				i+=1
+				j+=1
+			else:
+				i=i+count+1
+				j=j+count+1
+				count=-1
+
+
+	diag_score=121*n[4]+40*n[3]+13*n[2]+4*n[1]+n[0]						
+
+				
+			
+
 
 def Utility(gboard):
-	util=0
-	util=Gamescore(gboard)
+	util=10**4*Gamescore(gboard)
 	return(util)
 
 
@@ -857,7 +974,7 @@ def MinMax(gboard,player_no,depth,alpha,beta,cutoff):
 		removeRow(gboard,idx[0],idx[1],idx[2],idx[3])
 		hex_pos=removingRingGreedly(gboard,player_no)
 		gboard[getindex(board_size,hex_pos[0], hex_pos[1])[0]][getindex(board_size,hex_pos[0], hex_pos[1])[1]]="O"
-		tmp+="RS " + idx[0] + " " + idx[1] + " RE " + idx[2] + " " + idx[3] + " X " + hex_pos[0] + " "+ hex_pos[1]+" "
+		tmp+="RS " + str(idx[0]) + " " + str(idx[1]) + " RE " + str(idx[2]) + " " + str(idx[3]) + " X " + str(hex_pos[0]) + " "+ str(hex_pos[1])+" "
 		runs=getruns(gboard,player_no)
 	if (len(getPositionOfRing(player_no,gboard))>=board_size-2):
 		# print("yo I am here",file=sys.stderr)
@@ -925,7 +1042,10 @@ def update_move(move,player_no):
 		update_move(remains,player_no)
 
 def get_move():
-	s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),3)
+	if BOARD_SIZE==5:
+		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),3)
+	else:
+		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),2)
 	return s
 
 
@@ -946,7 +1066,7 @@ if my_player_no==2:
 else:
         opponent_player=2
 initial_config(BOARD_SIZE)
-# showboard(BOARD)
+showboard(BOARD)
 if my_player_no==1:
         for i in range(0,BOARD_SIZE):
                 move=opening(BOARD_SIZE)
