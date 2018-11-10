@@ -841,6 +841,79 @@ def Gamescore(gboard):
 def DiscInCol(gboard):
 	return(MarkersInCol(gboard,my_player_no)-MarkersInCol(gboard,opponent_player))
 
+
+def evalfunction(gboard):
+	score=0.0
+	score+=DiscInDiag(gboard)
+	score+=DiscInCol(gboard)
+	return(score)
+
+def DiscInDiag(gboard):
+	scores=[]
+	for player_no in range(1,3):
+		score=0.0
+		if BOARD_SIZE==5:
+			# rightRun
+			score +=(MarkerInDiag(gboard, player_no, 0, 4, 6, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 1, 3, 8, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 2, 2, 10, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 3, 1, 12, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 5, 1, 13, 9)) 
+			score +=(MarkerInDiag(gboard, player_no, 6, 0, 15, 9)) 
+			score +=(MarkerInDiag(gboard, player_no, 8, 0, 16, 8)) 
+			score +=(MarkerInDiag(gboard, player_no, 10, 0, 17, 7)) 
+			score +=(MarkerInDiag(gboard, player_no, 12, 0, 18, 6)) 
+
+			# left Runs
+			score +=(MarkerInDiag(gboard, player_no, 6, 0, 0, 6)) 
+			score +=(MarkerInDiag(gboard, player_no, 8, 0, 1, 7)) 
+			score +=(MarkerInDiag(gboard, player_no, 10, 0, 2, 8)) 
+			score +=(MarkerInDiag(gboard, player_no, 12, 0, 3, 9)) 
+			score +=(MarkerInDiag(gboard, player_no, 13, 1, 5, 9)) 
+			score +=(MarkerInDiag(gboard, player_no, 15, 1, 6, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 16, 2, 8, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 17, 3, 10, 10)) 
+			score +=(MarkerInDiag(gboard, player_no, 18, 4, 12, 10)) 
+		elif BOARD_SIZE==6:
+			# right score
+			score+=MarkerInDiag(gboard,player_no,0,7,4,11)
+			score+=MarkerInDiag(gboard,player_no,0,5,7,12)
+			score+=MarkerInDiag(gboard,player_no,1,4,9,12)
+			score+=MarkerInDiag(gboard,player_no,2,3,11,12)
+
+			score+=MarkerInDiag(gboard,player_no,3,2,13,12)
+			score+=MarkerInDiag(gboard,player_no,4,1,15,12)
+			score+=MarkerInDiag(gboard,player_no,6,1,16,11)
+			score+=MarkerInDiag(gboard,player_no,7,0,18,11)
+			
+			score+=MarkerInDiag(gboard,player_no,9,0,19,10)
+			score+=MarkerInDiag(gboard,player_no,11,0,20,9)
+			score+=MarkerInDiag(gboard,player_no,13,0,21,8)
+			score+=MarkerInDiag(gboard,player_no,15,0,22,7)
+			score+=MarkerInDiag(gboard,player_no,18,1,22,5)
+
+			# left score
+			score+=MarkerInDiag(gboard,player_no,4,1,0,5)
+			score+=MarkerInDiag(gboard,player_no,7,0,0,7)
+			score+=MarkerInDiag(gboard,player_no,9,0,2,8)
+			score+=MarkerInDiag(gboard,player_no,11,0,2,9)
+
+			score+=MarkerInDiag(gboard,player_no,13,0,3,10)
+			score+=MarkerInDiag(gboard,player_no,15,0,4,11)
+			score+=MarkerInDiag(gboard,player_no,16,1,6,11)
+			score+=MarkerInDiag(gboard,player_no,18,1,7,12)
+
+			score+=MarkerInDiag(gboard,player_no,19,2,9,12)
+			score+=MarkerInDiag(gboard,player_no,20,3,11,12)
+			score+=MarkerInDiag(gboard,player_no,21,4,13,12)
+			score+=MarkerInDiag(gboard,player_no,22,5,15,12)
+			score+=MarkerInDiag(gboard,player_no,22,7,18,11)
+		scores.append(score)
+	if my_player_no==1:
+		return(scores[0]-scores[1])
+	else:
+		return(scores[1]-scores[0])
+
 def MarkersInCol(gboard,player_no):
 	ver_score=0.0
 	n=[0.0,0.0,0.0,0.0,0.0]
@@ -956,7 +1029,7 @@ def MarkerInDiag(gboard,player_no,i1,j1,i2,j2):
 
 
 def Utility(gboard):
-	util=10**4*Gamescore(gboard)
+	util=(10**4)*Gamescore(gboard)+evalfunction(gboard)
 	return(util)
 
 
