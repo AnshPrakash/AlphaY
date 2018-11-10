@@ -925,17 +925,17 @@ def MarkersInCol(gboard,player_no):
 	count=-1
 	for j in range(0,len(gboard[0])):
 		i=0
-		while i<=BOARD_SIZE:
+		while i<len(gboard):
 			if gboard[i][j]!="X":
 				if gboard[i][j]==lookForMarker:
 					count+=1
-					if(i+1<BOARD_SIZE and gboard[i+1][j]==lookForMarker) :
+					if(i+2<len(gboard) and gboard[i+2][j]==lookForMarker) :
 						count+=1
-						if(i+2<BOARD_SIZE and gboard[i+2][j]==lookForMarker):
+						if(i+4<len(gboard) and gboard[i+4][j]==lookForMarker):
 							count+=1
-							if(i+3 <BOARD_SIZE and gboard[i+3][j]==lookForMarker):
+							if(i+6 <len(gboard) and gboard[i+6][j]==lookForMarker):
 								count+=1
-								if(i+4<BOARD_SIZE and gboard[i+4][j]==lookForMarker):
+								if(i+8<len(gboard) and gboard[i+8][j]==lookForMarker):
 									count+=1
 									n[count]=n[count]+1
 								else:
@@ -946,9 +946,14 @@ def MarkersInCol(gboard,player_no):
 							n[count]=n[count]+1
 					else:
 						n[count]=n[count]+1
-					i+=count
+					i+=count*2
 					count=-1
-	ver_score=121*n[4]+40*n[3]+13*n[2]+4*n[1]+n[0]
+				i+=2
+			else:
+				i+=1
+			count=-1	
+
+	ver_score=10000*n[4]+1000*n[3]+100*n[2]+10*n[1]+n[0]
 	return(ver_score)
 
 
@@ -960,6 +965,7 @@ def MarkerInDiag(gboard,player_no,i1,j1,i2,j2):
 		lookForMarker="b"
 	diag_score=0.0
 	n=[0.0,0.0,0.0,0.0,0.0]
+	count=-1
 	if(i1+j1==i2+j2):
 		i=i1
 		j=j1
@@ -1022,14 +1028,15 @@ def MarkerInDiag(gboard,player_no,i1,j1,i2,j2):
 				count=-1
 
 
-	diag_score=121*n[4]+40*n[3]+13*n[2]+4*n[1]+n[0]						
+	diag_score=10000*n[4]+1000*n[3]+100*n[2]+10*n[1]+n[0]		
+	return(diag_score)				
 
 				
 			
 
 
 def Utility(gboard):
-	util=(10**4)*Gamescore(gboard)+evalfunction(gboard)
+	util=(10**9)*Gamescore(gboard)+evalfunction(gboard)
 	return(util)
 
 
@@ -1133,13 +1140,13 @@ time_limit=int(data[2])
 RUN_SIZE=int(data[3])
 gameover=False
 # print(str(BOARD_SIZE) +" "+str(my_player_no)+" "+str(time_limit)+" "+str(RUN_SIZE),file=sys.stderr)
-print("Player id: {}".format(my_player_no), file=sys.stderr)
+# print("Player id: {}".format(my_player_no), file=sys.stderr)
 if my_player_no==2:
         opponent_player=1
 else:
         opponent_player=2
 initial_config(BOARD_SIZE)
-showboard(BOARD)
+# showboard(BOARD)
 if my_player_no==1:
         for i in range(0,BOARD_SIZE):
                 move=opening(BOARD_SIZE)
