@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python training.py 
+python Lion.py 
