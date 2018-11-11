@@ -892,7 +892,7 @@ def DiscInDiag(gboard):
 			# left score
 			score+=MarkerInDiag(gboard,player_no,4,1,0,5)
 			score+=MarkerInDiag(gboard,player_no,7,0,0,7)
-			score+=MarkerInDiag(gboard,player_no,9,0,2,8)
+			score+=MarkerInDiag(gboard,player_no,9,0,1,8)
 			score+=MarkerInDiag(gboard,player_no,11,0,2,9)
 
 			score+=MarkerInDiag(gboard,player_no,13,0,3,10)
@@ -1119,12 +1119,20 @@ def update_move(move,player_no):
 		update_move(remains,player_no)
 
 def get_move():
-	if BOARD_SIZE==5:
-		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),2)
+	depth=2
+	no_of_moves=len(AllSingleMoves(BOARD,my_player_no,False,""))
+	if no_of_moves<8:
+		depth=5
+	elif no_of_moves<20:
+		depth=4
+	elif no_of_moves<40:
+		depth=3
 	else:
-		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),2)
+		depth=2
+	print(no_of_moves,file=sys.stderr)
+	print("Depth "+str(depth),file=sys.stderr)
+	s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),depth)
 	return s
-
 
 
 
