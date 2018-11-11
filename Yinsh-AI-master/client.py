@@ -48,6 +48,7 @@ class Client(Communicator):
 					return True
 				else:
 					return False
+			# elif(Execution_Command == 'python'):
 			elif(Execution_Command == 'python'):
 				if(Extension == 'py'):
 					return True

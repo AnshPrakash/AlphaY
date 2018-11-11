@@ -61,8 +61,13 @@ idxToHex6=[[(-1, -1), (-1, -1), (-1, -1), (-1, -1), (-1, -1), (6, 35), (-1, -1),
 
 
 def getindex(board_size,hex_no,pos):
-	Ci,Cj = 2*board_size - 1, board_size
+	Ci,Cj=-1,-1
+	if board_size==5:
+		Ci,Cj=9,5
+	else:
+		Ci,Cj=11,6
 	if hex_no==0 and pos==0:
+		# print("I am here",file=sys.stderr)
 		return(Ci,Cj)
 	if pos<0 or pos>6*hex_no-1:
 		return((-1,-1))
@@ -85,18 +90,18 @@ def getindex(board_size,hex_no,pos):
 	return((i,j))
 
 def initial_config(board_size):
-	Xdim, Ydim = 4*board_size - 1, 2*board_size + 1
-	# if board_size==6:
-	# 	Xdim=23
-	# 	Ydim=13
-	# else:
-	# 	Xdim=19
-	# 	Ydim=11
+	Xdim=-1
+	Ydim=-1
+	if board_size==6:
+		Xdim=23
+		Ydim=13
+	else:
+		Xdim=19
+		Ydim=11
 	for i in range(0,Xdim):
-		l = ["X"]*Ydim
-		# l=[]
-		# for j in range(0,Ydim):
-		# 	l.append("X")
+		l=[]
+		for j in range(0,Ydim):
+			l.append("X")
 		BOARD.append(l)
 	for h in range(0,board_size+1):
 		for p in range(0,6*h):
@@ -195,13 +200,11 @@ def flipDisc(gboard,hex_no1, pos1, hex_no2,pos2):
 
 def placeRing(gboard,player_no,hex_no,pos):
 	board_size=BOARD_SIZE
-	x, y = getindex(board_size,hex_no, pos);
-	pieceToPlace = ["R", "B"][player_no - 1]
-	gboard[x][y] = pieceToPlace
-	# if (player_no == 1):
-	# 	gboard[index[0]][index[1]] = "R"
- # 	else:
-	# 	gboard[index[0]][index[1]] = "B"
+	index = getindex(board_size,hex_no, pos);
+	if (player_no == 1):
+		gboard[index[0]][index[1]] = "R"
+ 	else:
+		gboard[index[0]][index[1]] = "B"
 	
 
 def moveRing(gboard,player_no,shex,spos,fhex,fpos):
@@ -825,8 +828,8 @@ def Gamescore(gboard):
 		score = score + 0
 		score2 = score2+10
 
-	score=score+Rmarker/1000
-	score2=score2+Bmarker/1000
+	score=score+Rmarker/10
+	score2=score2+Bmarker/10
 	if my_player_no==1:
 		score=score-score2
 	else:
@@ -1033,7 +1036,7 @@ def MarkerInDiag(gboard,player_no,i1,j1,i2,j2):
 
 
 def Utility(gboard):
-	util=(10**8)*Gamescore(gboard)+evalfunction(gboard)
+	util=(10**9)*Gamescore(gboard)+evalfunction(gboard)
 	return(util)
 
 
@@ -1120,7 +1123,7 @@ def update_move(move,player_no):
 
 def get_move():
 	if BOARD_SIZE==5:
-		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),2)
+		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),3)
 	else:
 		s=MinMax(BOARD,my_player_no,0,-float("inf"),float("inf"),2)
 	return s
